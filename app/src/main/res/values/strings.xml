@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Order Up</string>
+    <string name="app_bar_cafe">Picture of cafe</string>
+    <string name="actions_settings">Settings</string>
+
+    <string name="settings_user_name_key">userName</string>
+    <string name="settings_user_name_title">Your Name</string>
+    <string name="settings_user_name_summary">Identifies your order</string>
 </resources>
