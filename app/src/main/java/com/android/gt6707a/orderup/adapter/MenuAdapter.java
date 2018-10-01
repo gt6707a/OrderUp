@@ -1,4 +1,4 @@
-package com.android.gt6707a.orderup;
+package com.android.gt6707a.orderup.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.android.gt6707a.orderup.R;
+import com.android.gt6707a.orderup.entity.MenuItem;
 import com.squareup.picasso.Picasso;
 import java.util.List;
 import butterknife.BindView;

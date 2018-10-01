@@ -11,6 +11,10 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.android.gt6707a.orderup.adapter.MenuAdapter;
+import com.android.gt6707a.orderup.entity.MenuItem;
+import com.android.gt6707a.orderup.viewModel.MenuViewModel;
+
 import java.util.List;
 
 import butterknife.BindView;

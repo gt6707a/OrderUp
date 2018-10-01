@@ -6,4 +6,5 @@
     <string name="settings_user_name_key">userName</string>
     <string name="settings_user_name_title">Your Name</string>
     <string name="settings_user_name_summary">Identifies your order</string>
+    <string name="menu_item_photo_description">Photo of menu item</string>
 </resources>

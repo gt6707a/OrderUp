@@ -1,4 +1,4 @@
-package com.android.gt6707a.orderup;
+package com.android.gt6707a.orderup.entity;
 
 public class MenuItem {
 
