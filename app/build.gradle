@@ -26,14 +26,13 @@ dependencies {
     implementation "com.android.support:design:$androidSupportVersion"
     implementation "com.android.support:preference-v7:$androidSupportVersion"
     implementation "com.android.support:support-v4:$androidSupportVersion"
-    implementation 'com.android.support:cardview-v7:27.1.1'
+    implementation "com.android.support:cardview-v7:$androidSupportVersion"
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.firebase:firebase-core:16.0.3'
     implementation 'com.google.firebase:firebase-firestore:17.1.0'
     implementation 'com.jakewharton.timber:timber:4.7.1'
     implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-
     implementation "android.arch.lifecycle:extensions:1.1.1"
     annotationProcessor "android.arch.lifecycle:compiler:1.1.1"
 
