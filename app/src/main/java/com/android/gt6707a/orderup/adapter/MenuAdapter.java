@@ -2,6 +2,7 @@ package com.android.gt6707a.orderup.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +16,31 @@ import com.squareup.picasso.Picasso;
 import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
+import timber.log.Timber;
 
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuItemViewHolder> {
 
   private Context context;
   private List<MenuItem> menuItems;
+  private OrderItemClickListener orderItemClickListener;
 
-  public MenuAdapter(Context context) {
+  public List<MenuItem> getMenuItems() {
+    return menuItems;
+  }
+
+  public void setMenuItems(List<MenuItem> menuItems) {
+    this.menuItems = menuItems;
+    notifyDataSetChanged();
+  }
+
+  public interface OrderItemClickListener {
+    void onOrderItemClicked(MenuItem item);
+  }
+
+  public MenuAdapter(Context context, @NonNull OrderItemClickListener orderItemClickListener) {
     this.context = context;
+    this.orderItemClickListener = orderItemClickListener;
   }
 
   @NonNull
@@ -48,15 +66,6 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuItemViewHo
     return getMenuItems() == null ? 0 : getMenuItems().size();
   }
 
-  public List<MenuItem> getMenuItems() {
-    return menuItems;
-  }
-
-  public void setMenuItems(List<MenuItem> menuItems) {
-    this.menuItems = menuItems;
-    notifyDataSetChanged();
-  }
-
   class MenuItemViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.menu_item_name_text_view)
@@ -65,9 +74,19 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MenuItemViewHo
     @BindView(R.id.menu_item_image_view)
     public ImageView menuItemImageView;
 
+    @BindView(R.id.order_item_fab)
+    public FloatingActionButton orderItemFab;
+
     public MenuItemViewHolder(View itemView) {
       super(itemView);
       ButterKnife.bind(this, itemView);
+    }
+
+    @OnClick(R.id.order_item_fab)
+    public void orderItemClicked() {
+      Timber.d("order item");
+      MenuItem item = menuItems.get(getAdapterPosition());
+      orderItemClickListener.onOrderItemClicked(item);
     }
   }
 }

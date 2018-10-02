@@ -6,6 +6,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.android.gt6707a.orderup.adapter.MenuAdapter;
 import com.android.gt6707a.orderup.entity.MenuItem;
+import com.android.gt6707a.orderup.entity.OrderItem;
 import com.android.gt6707a.orderup.viewModel.MenuViewModel;
 
 import java.util.List;
@@ -25,11 +27,14 @@ import butterknife.ButterKnife;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MenuFragment extends Fragment {
+public class MenuFragment extends Fragment
+    implements MenuAdapter.OrderItemClickListener {
 
     @BindView(R.id.menu_recycler_view)
     RecyclerView menuRecyclerView;
     MenuAdapter menuAdapter;
+
+    private MenuViewModel menuViewModel;
 
     public MenuFragment() {
         // Required empty public constructor
@@ -41,9 +46,6 @@ public class MenuFragment extends Fragment {
      */
     public static MenuFragment newInstance() {
         MenuFragment fragment = new MenuFragment();
-        Bundle args = new Bundle();
-//        args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//        fragment.setArguments(args);
         return fragment;
     }
 
@@ -57,10 +59,10 @@ public class MenuFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         menuRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        menuAdapter = new MenuAdapter(getContext());
+        menuAdapter = new MenuAdapter(getContext(), this);
         menuRecyclerView.setAdapter(menuAdapter);
 
-        MenuViewModel menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
+        menuViewModel = ViewModelProviders.of(this).get(MenuViewModel.class);
         menuViewModel.getMenuItems().observe(this, new Observer<List<MenuItem>>() {
             @Override
             public void onChanged(@Nullable List<MenuItem> menuItems) {
@@ -71,4 +73,18 @@ public class MenuFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onOrderItemClicked(MenuItem item) {
+        OrderItem order = new OrderItem();
+        order.setItem(item.getName());
+
+        String customer = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(getString(R.string.settings_user_name_key), "deviceId");
+        order.setCustomer(customer);
+
+        order.setStatusId(OrderItem.WAITING);
+
+        menuViewModel.orderItem(order);
+
+        ((MainActivity)getActivity()).navigateToTab(1);
+    }
 }

@@ -4,11 +4,14 @@ import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
 import com.android.gt6707a.orderup.entity.MenuItem;
+import com.android.gt6707a.orderup.entity.OrderItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -21,6 +24,8 @@ import timber.log.Timber;
 
 public class MenuViewModel extends AndroidViewModel {
 
+  private FirebaseFirestore db;
+
   private MutableLiveData<List<MenuItem>> menuItems;
 
   public LiveData<List<MenuItem>> getMenuItems() {
@@ -32,7 +37,7 @@ public class MenuViewModel extends AndroidViewModel {
 
     menuItems = new MutableLiveData<>();
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
+    db = FirebaseFirestore.getInstance();
     FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
             .setTimestampsInSnapshotsEnabled(true)
             .build();
@@ -59,5 +64,10 @@ public class MenuViewModel extends AndroidViewModel {
                 }
               }
             });
+  }
+
+  public void orderItem(OrderItem order) {
+    CollectionReference orders = db.collection("orders");
+    orders.add(order);
   }
 }

@@ -9,5 +9,8 @@
     <string name="main_tabs_orders">Orders</string>
 
     <string name="menu_item_photo_description">Photo of menu item</string>
+    <string name="order_waiting">Waiting</string>
+    <string name="order_ready">Ready</string>
+    <string name="order_claim">Claim</string>
 
 </resources>

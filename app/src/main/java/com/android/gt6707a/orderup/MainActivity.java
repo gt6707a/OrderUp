@@ -103,4 +103,8 @@ public class MainActivity extends AppCompatActivity {
 
     return super.onOptionsItemSelected(item);
   }
+
+  public void navigateToTab(int tabIndex) {
+      viewPager.setCurrentItem(tabIndex);
+  }
 }

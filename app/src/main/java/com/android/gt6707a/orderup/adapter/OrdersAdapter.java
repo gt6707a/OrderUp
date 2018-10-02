@@ -1,10 +1,12 @@
 package com.android.gt6707a.orderup.adapter;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.android.gt6707a.orderup.R;
@@ -14,12 +16,22 @@ import com.google.firebase.firestore.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
 
-  public OrdersAdapter(Query query) {
+  Context context;
+  OrderHandler orderHandler;
+
+  public interface OrderHandler {
+    void onClaimingOrder(OrderItem order);
+    void onReadyOrder(OrderItem order);
+  }
+
+  public OrdersAdapter(Context context, OrderHandler orderHandler, Query query) {
     super(query);
-    // mListener = listener;
+    this.context = context;
+    this.orderHandler = orderHandler;
   }
 
   @NonNull
@@ -31,10 +43,10 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
 
   @Override
   public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-    holder.bind(getSnapshot(position));
+    holder.bind(getSnapshot(position), context);
   }
 
-  static class ViewHolder extends RecyclerView.ViewHolder {
+  class ViewHolder extends RecyclerView.ViewHolder {
 
     @BindView(R.id.order_item_text_view)
     TextView orderItemTextView;
@@ -42,27 +54,61 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
     @BindView(R.id.order_item_customer_text_view)
     TextView orderItemCustomerTextView;
 
+    @BindView(R.id.order_item_status_text_view)
+    TextView orderItemStatusTextView;
+
+    @BindView(R.id.ready_button)
+    Button readyButton;
+
+    @BindView(R.id.claim_button)
+    Button claimButton;
+
     public ViewHolder(View itemView) {
       super(itemView);
       ButterKnife.bind(this, itemView);
     }
 
-    public void bind(final DocumentSnapshot snapshot) {
+    public void bind(final DocumentSnapshot snapshot, Context context) {
 
-      OrderItem orderItem = snapshot.toObject(OrderItem.class);
+      final OrderItem orderItem = snapshot.toObject(OrderItem.class);
+      orderItem.setId(snapshot.getId());
 
       orderItemTextView.setText(orderItem.getItem());
       orderItemCustomerTextView.setText(orderItem.getCustomer());
+      orderItemStatusTextView.setText(toStatusText(orderItem.getStatusId(), context));
 
-      // Click listener
-      //            itemView.setOnClickListener(new View.OnClickListener() {
-      //                @Override
-      //                public void onClick(View view) {
-      //                    if (listener != null) {
-      //                        listener.onRestaurantSelected(snapshot);
-      //                    }
-      //                }
-      //            });
+      if (orderItem.getStatusId() == OrderItem.WAITING) {
+          readyButton.setVisibility(View.VISIBLE);
+          claimButton.setVisibility(View.INVISIBLE);
+      } else {
+          readyButton.setVisibility(View.INVISIBLE);
+          claimButton.setVisibility(View.VISIBLE);
+      }
+
+      readyButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          orderHandler.onReadyOrder(orderItem);
+        }
+      });
+
+      claimButton.setOnClickListener(new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+          orderHandler.onClaimingOrder(orderItem);
+        }
+      });
+    }
+
+    String toStatusText(long statusId, Context context) {
+      switch ((int)statusId) {
+        case OrderItem.WAITING:
+          return context.getString(R.string.order_waiting);
+        case OrderItem.READY:
+          return context.getString(R.string.order_ready);
+        default:
+          return "";
+      }
     }
   }
 }
