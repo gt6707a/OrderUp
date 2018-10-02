@@ -1,5 +1,6 @@
 package com.android.gt6707a.orderup;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,8 +13,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     viewPager.setAdapter(mSectionsPagerAdapter);
 
     tabLayout.setupWithViewPager(viewPager);
+
+    getDeviceToken();
   }
 
   /**
@@ -105,6 +113,20 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public void navigateToTab(int tabIndex) {
-      viewPager.setCurrentItem(tabIndex);
+    viewPager.setCurrentItem(tabIndex);
+  }
+
+  private void getDeviceToken() {
+    FirebaseInstanceId.getInstance()
+        .getInstanceId()
+        .addOnSuccessListener(
+            new OnSuccessListener<InstanceIdResult>() {
+              @Override
+              public void onSuccess(InstanceIdResult instanceIdResult) {
+                String newToken = instanceIdResult.getToken();
+                Timber.d("new token " + newToken);
+                getSharedPreferences("settings", Context.MODE_PRIVATE).edit().putString("token", newToken).apply();
+              }
+            });
   }
 }

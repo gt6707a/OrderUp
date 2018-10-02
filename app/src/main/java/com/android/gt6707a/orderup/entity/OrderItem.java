@@ -8,6 +8,7 @@ public class OrderItem {
     private String item;
     private String customer;
     private long statusId;
+    private String token;
 
     public String getItem() {
         return item;
@@ -39,5 +40,13 @@ public class OrderItem {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

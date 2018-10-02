@@ -3,6 +3,7 @@ package com.android.gt6707a.orderup;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -82,6 +83,8 @@ public class MenuFragment extends Fragment
         order.setCustomer(customer);
 
         order.setStatusId(OrderItem.WAITING);
+        String token = getActivity().getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
+        order.setToken(token);
 
         menuViewModel.orderItem(order);
 

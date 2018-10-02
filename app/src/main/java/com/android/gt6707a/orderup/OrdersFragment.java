@@ -110,13 +110,13 @@ public class OrdersFragment extends Fragment
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Timber.d("order removed");
+                        Timber.d("order marked ready");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Timber.d("Failed to remove order");
+                        Timber.d("Failed to update order");
                     }
                 });
     }
