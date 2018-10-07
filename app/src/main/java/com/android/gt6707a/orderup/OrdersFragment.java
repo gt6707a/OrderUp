@@ -71,6 +71,8 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandl
         ordersFirestore
             .collection("orders")
             .orderBy("statusId", Query.Direction.DESCENDING);
+            // Might have a bug with firebase API here. Compound sorting causes updates to not fire
+            //.orderBy("orderTime", Query.Direction.ASCENDING);
   }
 
   private void initRecyclerView() {
@@ -94,14 +96,14 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandl
             new OnSuccessListener<Void>() {
               @Override
               public void onSuccess(Void aVoid) {
-                Timber.d("order removed");
+                Timber.d("order claimed");
               }
             })
         .addOnFailureListener(
             new OnFailureListener() {
               @Override
               public void onFailure(@NonNull Exception e) {
-                Timber.d("Failed to remove order");
+                Timber.d("Failed to claim order");
               }
             });
   }

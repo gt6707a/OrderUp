@@ -20,8 +20,6 @@ import com.google.firebase.firestore.Query;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
-import timber.log.Timber;
 
 public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
 
@@ -59,7 +57,7 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
     long statusId = change.getDocument().getLong("statusId");
     String orderToken = change.getDocument().getString("token");
     if (statusId == OrderItem.READY && orderToken.equals(myToken)) {
-      Toast.makeText(context, "Your order is ready for pick up", Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.your_order_is_ready), Toast.LENGTH_SHORT).show();
     }
   }
 
@@ -104,12 +102,7 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
           claimButton.setVisibility(View.INVISIBLE);
       } else {
           readyButton.setVisibility(View.INVISIBLE);
-          if (orderItem.getToken().equals(myToken)) {
-            claimButton.setVisibility(View.VISIBLE);
-            Timber.d("set claim visible");
-          } else {
-            claimButton.setVisibility(View.INVISIBLE);
-          }
+          claimButton.setVisibility(orderItem.getToken().equals(myToken) ? View.VISIBLE : View.INVISIBLE);
       }
 
       if (orderItem.getToken().equals(myToken)) {

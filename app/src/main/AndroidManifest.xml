@@ -36,7 +36,9 @@
             </intent-filter>
         </service>
 
-        <receiver android:name=".OrderUpAppWidgetProvider">
+        <service android:name=".widget.OrderUpWidgetService" />
+
+        <receiver android:name=".widget.OrderUpAppWidgetProvider">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

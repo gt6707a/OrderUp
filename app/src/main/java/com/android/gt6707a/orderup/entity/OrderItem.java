@@ -1,5 +1,7 @@
 package com.android.gt6707a.orderup.entity;
 
+import com.google.firebase.firestore.Exclude;
+
 public class OrderItem {
   public static final int WAITING = 1;
   public static final int READY = 2;
@@ -35,6 +37,7 @@ public class OrderItem {
     this.statusId = statusId;
   }
 
+  @Exclude
   public String getId() {
     return id;
   }

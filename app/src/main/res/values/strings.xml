@@ -8,11 +8,13 @@
     <string name="main_tabs_menu">Menu</string>
     <string name="main_tabs_orders">Orders</string>
 
+
     <string name="menu_item_photo_description">Photo of menu item</string>
     <string name="order_waiting">Waiting</string>
     <string name="order_ready">Ready</string>
     <string name="order_claim">Claim</string>
-    <string name="appwidget_text">EXAMPLE</string>
-    <string name="add_widget">Add widget</string>
 
+    <string name="order_item">Order Item</string>
+    <string name="no_orders">No orders</string>
+    <string name="your_order_is_ready">Your order is ready for pick up</string>
 </resources>
