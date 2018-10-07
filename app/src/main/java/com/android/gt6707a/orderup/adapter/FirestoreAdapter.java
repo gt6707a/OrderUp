@@ -124,11 +124,13 @@ public abstract class FirestoreAdapter<VH extends RecyclerView.ViewHolder>
       // Item changed but remained in same position
       mSnapshots.set(change.getOldIndex(), change.getDocument());
       notifyItemChanged(change.getOldIndex());
+      notifyDataSetChanged();
     } else {
       // Item changed and changed position
       mSnapshots.remove(change.getOldIndex());
       mSnapshots.add(change.getNewIndex(), change.getDocument());
       notifyItemMoved(change.getOldIndex(), change.getNewIndex());
+      notifyDataSetChanged();
     }
   }
 

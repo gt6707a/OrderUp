@@ -2,11 +2,9 @@ package com.android.gt6707a.orderup;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +21,7 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /** A simple {@link Fragment} subclass. */
-public class OrdersFragment extends Fragment
-    implements OrdersAdapter.OrderHandler {
+public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandler {
 
   private FirebaseFirestore ordersFirestore;
   private OrdersAdapter ordersAdapter;
@@ -71,7 +68,9 @@ public class OrdersFragment extends Fragment
   private void initFirestore() {
     ordersFirestore = FirebaseFirestore.getInstance();
     ordersQuery =
-        ordersFirestore.collection("orders").orderBy("statusId", Query.Direction.DESCENDING);
+        ordersFirestore
+            .collection("orders")
+            .orderBy("statusId", Query.Direction.DESCENDING);
   }
 
   private void initRecyclerView() {
@@ -85,39 +84,47 @@ public class OrdersFragment extends Fragment
     ordersRecyclerView.setAdapter(ordersAdapter);
   }
 
-    @Override
-    public void onClaimingOrder(OrderItem order) {
-        ordersFirestore.collection("orders").document(order.getId())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                  @Override
-                  public void onSuccess(Void aVoid) {
-                    Timber.d("order removed");
-                  }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                  @Override
-                  public void onFailure(@NonNull Exception e) {
-                    Timber.d("Failed to remove order");
-                  }
-                });
-    }
+  @Override
+  public void onClaimingOrder(OrderItem order) {
+    ordersFirestore
+        .collection("orders")
+        .document(order.getId())
+        .delete()
+        .addOnSuccessListener(
+            new OnSuccessListener<Void>() {
+              @Override
+              public void onSuccess(Void aVoid) {
+                Timber.d("order removed");
+              }
+            })
+        .addOnFailureListener(
+            new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                Timber.d("Failed to remove order");
+              }
+            });
+  }
 
-    @Override
-    public void onReadyOrder(OrderItem order) {
-        ordersFirestore.collection("orders").document(order.getId())
-                .update("statusId", OrderItem.READY)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Timber.d("order marked ready");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Timber.d("Failed to update order");
-                    }
-                });
-    }
+  @Override
+  public void onReadyOrder(OrderItem order) {
+    ordersFirestore
+        .collection("orders")
+        .document(order.getId())
+        .update("statusId", OrderItem.READY)
+        .addOnSuccessListener(
+            new OnSuccessListener<Void>() {
+              @Override
+              public void onSuccess(Void aVoid) {
+                Timber.d("order marked ready");
+              }
+            })
+        .addOnFailureListener(
+            new OnFailureListener() {
+              @Override
+              public void onFailure(@NonNull Exception e) {
+                Timber.d("Failed to update order");
+              }
+            });
+  }
 }

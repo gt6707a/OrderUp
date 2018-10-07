@@ -21,10 +21,10 @@ import com.google.firebase.firestore.Query;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import timber.log.Timber;
 
 public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
 
-  String myToken;
   Context context;
   OrderHandler orderHandler;
 
@@ -37,7 +37,6 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
     super(query);
     this.context = context;
     this.orderHandler = orderHandler;
-    myToken = context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
   }
 
   @NonNull
@@ -56,6 +55,7 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
   protected void onDocumentModified(DocumentChange change) {
     super.onDocumentModified(change);
 
+    String myToken = context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
     long statusId = change.getDocument().getLong("statusId");
     String orderToken = change.getDocument().getString("token");
     if (statusId == OrderItem.READY && orderToken.equals(myToken)) {
@@ -97,6 +97,8 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
       orderItemCustomerTextView.setText(orderItem.getCustomer());
       orderItemStatusTextView.setText(toStatusText(orderItem.getStatusId(), context));
 
+      String myToken = context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
+
       if (orderItem.getStatusId() == OrderItem.WAITING) {
           readyButton.setVisibility(View.VISIBLE);
           claimButton.setVisibility(View.INVISIBLE);
@@ -104,6 +106,7 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
           readyButton.setVisibility(View.INVISIBLE);
           if (orderItem.getToken().equals(myToken)) {
             claimButton.setVisibility(View.VISIBLE);
+            Timber.d("set claim visible");
           } else {
             claimButton.setVisibility(View.INVISIBLE);
           }
