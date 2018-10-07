@@ -12,5 +12,7 @@
     <string name="order_waiting">Waiting</string>
     <string name="order_ready">Ready</string>
     <string name="order_claim">Claim</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>
