@@ -119,7 +119,7 @@ public abstract class FirestoreAdapter<VH extends RecyclerView.ViewHolder>
     notifyItemInserted(change.getNewIndex());
   }
 
-  protected  void onDocumentModified(DocumentChange change) {
+  protected void onDocumentModified(DocumentChange change) {
     if (change.getOldIndex() == change.getNewIndex()) {
       // Item changed but remained in same position
       mSnapshots.set(change.getOldIndex(), change.getDocument());

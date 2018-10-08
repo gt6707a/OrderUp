@@ -13,7 +13,9 @@ import android.widget.TextView;
 import com.android.gt6707a.orderup.R;
 import com.android.gt6707a.orderup.entity.MenuItem;
 import com.squareup.picasso.Picasso;
+
 import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;

@@ -125,7 +125,10 @@ public class MainActivity extends AppCompatActivity {
               public void onSuccess(InstanceIdResult instanceIdResult) {
                 String newToken = instanceIdResult.getToken();
                 Timber.d("new token " + newToken);
-                getSharedPreferences("settings", Context.MODE_PRIVATE).edit().putString("token", newToken).apply();
+                getSharedPreferences("settings", Context.MODE_PRIVATE)
+                    .edit()
+                    .putString("token", newToken)
+                    .apply();
               }
             });
   }

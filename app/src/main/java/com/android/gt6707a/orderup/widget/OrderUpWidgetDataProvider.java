@@ -3,7 +3,6 @@ package com.android.gt6707a.orderup.widget;
 import com.android.gt6707a.orderup.OrderUpFirebaseMessagingService;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import timber.log.Timber;

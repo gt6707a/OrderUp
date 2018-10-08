@@ -28,6 +28,7 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
 
   public interface OrderHandler {
     void onClaimingOrder(OrderItem order);
+
     void onReadyOrder(OrderItem order);
   }
 
@@ -53,11 +54,13 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
   protected void onDocumentModified(DocumentChange change) {
     super.onDocumentModified(change);
 
-    String myToken = context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
+    String myToken =
+        context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
     long statusId = change.getDocument().getLong("statusId");
     String orderToken = change.getDocument().getString("token");
     if (statusId == OrderItem.READY && orderToken.equals(myToken)) {
-      Toast.makeText(context, context.getString(R.string.your_order_is_ready), Toast.LENGTH_SHORT).show();
+      Toast.makeText(context, context.getString(R.string.your_order_is_ready), Toast.LENGTH_SHORT)
+          .show();
     }
   }
 
@@ -95,37 +98,41 @@ public class OrdersAdapter extends FirestoreAdapter<OrdersAdapter.ViewHolder> {
       orderItemCustomerTextView.setText(orderItem.getCustomer());
       orderItemStatusTextView.setText(toStatusText(orderItem.getStatusId(), context));
 
-      String myToken = context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
+      String myToken =
+          context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
 
       if (orderItem.getStatusId() == OrderItem.WAITING) {
-          readyButton.setVisibility(View.VISIBLE);
-          claimButton.setVisibility(View.INVISIBLE);
+        readyButton.setVisibility(View.VISIBLE);
+        claimButton.setVisibility(View.INVISIBLE);
       } else {
-          readyButton.setVisibility(View.INVISIBLE);
-          claimButton.setVisibility(orderItem.getToken().equals(myToken) ? View.VISIBLE : View.INVISIBLE);
+        readyButton.setVisibility(View.INVISIBLE);
+        claimButton.setVisibility(
+            orderItem.getToken().equals(myToken) ? View.VISIBLE : View.INVISIBLE);
       }
 
       if (orderItem.getToken().equals(myToken)) {
         orderItemLayout.setBackgroundColor(Color.LTGRAY);
       }
 
-      readyButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          orderHandler.onReadyOrder(orderItem);
-        }
-      });
+      readyButton.setOnClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              orderHandler.onReadyOrder(orderItem);
+            }
+          });
 
-      claimButton.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-          orderHandler.onClaimingOrder(orderItem);
-        }
-      });
+      claimButton.setOnClickListener(
+          new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+              orderHandler.onClaimingOrder(orderItem);
+            }
+          });
     }
 
     String toStatusText(long statusId, Context context) {
-      switch ((int)statusId) {
+      switch ((int) statusId) {
         case OrderItem.WAITING:
           return context.getString(R.string.order_waiting);
         case OrderItem.READY:

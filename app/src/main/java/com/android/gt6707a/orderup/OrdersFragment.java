@@ -68,11 +68,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandl
   private void initFirestore() {
     ordersFirestore = FirebaseFirestore.getInstance();
     ordersQuery =
-        ordersFirestore
-            .collection("orders")
-            .orderBy("statusId", Query.Direction.DESCENDING);
-            // Might have a bug with firebase API here. Compound sorting causes updates to not fire
-            //.orderBy("orderTime", Query.Direction.ASCENDING);
+        ordersFirestore.collection("orders").orderBy("statusId", Query.Direction.DESCENDING);
+    // Might have a bug with firebase API here. Compound sorting causes updates to not fire
+    // .orderBy("orderTime", Query.Direction.ASCENDING);
   }
 
   private void initRecyclerView() {
