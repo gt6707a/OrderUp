@@ -54,7 +54,7 @@ public class OrderUpAppWidgetProvider extends AppWidgetProvider {
       // add pending intent to claim
       Intent claimOrderIntent = new Intent(context, OrderUpWidgetService.class);
       claimOrderIntent.setAction(OrderUpWidgetService.ACTION_CLAIM_ORDER);
-      claimOrderIntent.putExtra("orderId", orderItem.getId());
+      claimOrderIntent.putExtra("orderId", orderItem.getKey());
       PendingIntent claimOrderPendingIntent =
           PendingIntent.getService(context, 0, claimOrderIntent, PendingIntent.FLAG_UPDATE_CURRENT);
       views.setOnClickPendingIntent(R.id.widget_claim_button, claimOrderPendingIntent);
@@ -91,7 +91,7 @@ public class OrderUpAppWidgetProvider extends AppWidgetProvider {
                     List<OrderItem> orders = new ArrayList<>();
                     for (QueryDocumentSnapshot snapshot : value) {
                       OrderItem o = snapshot.toObject(OrderItem.class);
-                      o.setId(snapshot.getId());
+                      o.setKey(snapshot.getId());
                       orders.add(o);
                     }
 

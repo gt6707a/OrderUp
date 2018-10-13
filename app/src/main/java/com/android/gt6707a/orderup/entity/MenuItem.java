@@ -1,9 +1,12 @@
 package com.android.gt6707a.orderup.entity;
 
+import com.google.firebase.database.IgnoreExtraProperties;
+
+@IgnoreExtraProperties
 public class MenuItem {
 
+  private String uid;
   private String name;
-  private String description;
   private String photo;
 
   public String getName() {
@@ -14,14 +17,6 @@ public class MenuItem {
     this.name = name;
   }
 
-  public String getDescription() {
-    return description;
-  }
-
-  public void setDescription(String description) {
-    this.description = description;
-  }
-
   public String getPhoto() {
     return photo;
   }
@@ -30,9 +25,11 @@ public class MenuItem {
     this.photo = photo;
   }
 
-  public MenuItem(String name, String description, String photo) {
+  public MenuItem() {}
+
+  public MenuItem(String uid, String name, String photo) {
+    this.uid = uid;
     this.name = name;
-    this.description = description;
     this.photo = photo;
   }
 }

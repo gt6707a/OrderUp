@@ -1,12 +1,17 @@
 package com.android.gt6707a.orderup.entity;
 
-import com.google.firebase.firestore.Exclude;
+import com.google.firebase.database.Exclude;
+import com.google.firebase.database.IgnoreExtraProperties;
 
+import java.util.HashMap;
+import java.util.Map;
+
+@IgnoreExtraProperties
 public class OrderItem {
   public static final int WAITING = 1;
   public static final int READY = 2;
 
-  private String id;
+  private String key;
   private String item;
   private String customer;
   private long statusId;
@@ -38,12 +43,12 @@ public class OrderItem {
   }
 
   @Exclude
-  public String getId() {
-    return id;
+  public String getKey() {
+    return key;
   }
 
-  public void setId(String id) {
-    this.id = id;
+  public void setKey(String key) {
+    this.key = key;
   }
 
   public String getToken() {
@@ -60,5 +65,18 @@ public class OrderItem {
 
   public void setOrderTime(long orderTime) {
     this.orderTime = orderTime;
+  }
+
+  @Exclude
+  public Map<String, Object> toMap() {
+    HashMap<String, Object> result = new HashMap<>();
+    result.put("item", item);
+    result.put("customer", customer);
+    result.put("statusId", statusId);
+    result.put("key", key);
+    result.put("token", token);
+    result.put("orderTime", orderTime);
+
+    return result;
   }
 }

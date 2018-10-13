@@ -2,6 +2,7 @@ package com.android.gt6707a.orderup;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,23 +10,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.android.gt6707a.orderup.adapter.OrdersAdapter;
 import com.android.gt6707a.orderup.entity.OrderItem;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /** A simple {@link Fragment} subclass. */
-public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandler {
+public class OrdersFragment extends Fragment implements OrderItemViewHolder.OrderHandler {
 
-  private FirebaseFirestore ordersFirestore;
-  private OrdersAdapter ordersAdapter;
-  private Query ordersQuery;
+  private DatabaseReference db;
+  private FirebaseRecyclerAdapter<OrderItem, OrderItemViewHolder> ordersAdapter;
 
   @BindView(R.id.orders_recycler_view)
   RecyclerView ordersRecyclerView;
@@ -41,12 +46,51 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandl
     View view = inflater.inflate(R.layout.fragment_orders, container, false);
     ButterKnife.bind(this, view);
 
-    FirebaseFirestore.setLoggingEnabled(true);
-
-    initFirestore();
-    initRecyclerView();
+    db = FirebaseDatabase.getInstance().getReference();
 
     return view;
+  }
+
+  @Override
+  public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+    super.onActivityCreated(savedInstanceState);
+
+    ordersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+    FirebaseRecyclerOptions options =
+        new FirebaseRecyclerOptions.Builder<OrderItem>()
+            .setQuery(db.child("orders"), OrderItem.class)
+            .build();
+
+    ordersAdapter =
+        new FirebaseRecyclerAdapter<OrderItem, OrderItemViewHolder>(options) {
+          @NonNull
+          @Override
+          public OrderItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            return new OrderItemViewHolder(
+                inflater.inflate(R.layout.order_item_layout, parent, false));
+          }
+
+          @Override
+          protected void onBindViewHolder(
+              @NonNull OrderItemViewHolder holder,
+              int position,
+              @NonNull final OrderItem orderItem) {
+
+            holder.bindToOrderItem(orderItem, getContext(), OrdersFragment.this);
+          }
+
+          @NonNull
+          @Override
+          public OrderItem getItem(int position) {
+            DataSnapshot snapshot = getSnapshots().getSnapshot(position);
+            OrderItem orderItem = snapshot.getValue(OrderItem.class);
+            orderItem.setKey(snapshot.getKey());
+            return orderItem;
+          }
+        };
+
+    ordersRecyclerView.setAdapter(ordersAdapter);
   }
 
   @Override
@@ -65,31 +109,9 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandl
     }
   }
 
-  private void initFirestore() {
-    ordersFirestore = FirebaseFirestore.getInstance();
-    ordersQuery =
-        ordersFirestore.collection("orders").orderBy("statusId", Query.Direction.DESCENDING);
-    // Might have a bug with firebase API here. Compound sorting causes updates to not fire
-    // .orderBy("orderTime", Query.Direction.ASCENDING);
-  }
-
-  private void initRecyclerView() {
-    if (ordersQuery == null) {
-      Timber.w("No query, not initializing RecyclerView");
-    }
-
-    ordersAdapter = new OrdersAdapter(getActivity(), this, ordersQuery);
-
-    ordersRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    ordersRecyclerView.setAdapter(ordersAdapter);
-  }
-
-  @Override
   public void onClaimingOrder(OrderItem order) {
-    ordersFirestore
-        .collection("orders")
-        .document(order.getId())
-        .delete()
+    db.child("/orders/" + order.getKey())
+        .removeValue()
         .addOnSuccessListener(
             new OnSuccessListener<Void>() {
               @Override
@@ -106,12 +128,11 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandl
             });
   }
 
-  @Override
   public void onReadyOrder(OrderItem order) {
-    ordersFirestore
-        .collection("orders")
-        .document(order.getId())
-        .update("statusId", OrderItem.READY)
+    Map<String, Object> updates = new HashMap<>();
+    updates.put("/orders/" + order.getKey() + "/statusId", OrderItem.READY);
+
+    db.updateChildren(updates)
         .addOnSuccessListener(
             new OnSuccessListener<Void>() {
               @Override
@@ -126,5 +147,6 @@ public class OrdersFragment extends Fragment implements OrdersAdapter.OrderHandl
                 Timber.d("Failed to update order");
               }
             });
+    ;
   }
 }
