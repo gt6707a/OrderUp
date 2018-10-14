@@ -1,7 +1,6 @@
+package com.android.gt6707a.orderup;
+
 import android.app.Application;
-
-import com.android.gt6707a.orderup.BuildConfig;
-
 import timber.log.Timber;
 
 public class OrderUpApplication extends Application {
