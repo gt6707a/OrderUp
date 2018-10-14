@@ -20,7 +20,7 @@ import com.google.firebase.messaging.FirebaseMessagingService;
 /** Listens for changes in the InstanceID */
 public class OrderUpFirebaseMessagingService extends FirebaseMessagingService {
 
-  public static String token;
+  private static String token;
 
   @Override
   public void onNewToken(String s) {

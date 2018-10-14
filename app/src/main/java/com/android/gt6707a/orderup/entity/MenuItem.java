@@ -5,7 +5,6 @@ import com.google.firebase.database.IgnoreExtraProperties;
 @IgnoreExtraProperties
 public class MenuItem {
 
-  private String uid;
   private String name;
   private String photo;
 
@@ -27,8 +26,7 @@ public class MenuItem {
 
   public MenuItem() {}
 
-  public MenuItem(String uid, String name, String photo) {
-    this.uid = uid;
+  public MenuItem(String name, String photo) {
     this.name = name;
     this.photo = photo;
   }

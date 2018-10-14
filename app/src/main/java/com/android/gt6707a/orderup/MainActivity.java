@@ -23,14 +23,6 @@ import timber.log.Timber;
 
 public class MainActivity extends AppCompatActivity {
 
-  /**
-   * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
-   * sections. We use a {@link FragmentPagerAdapter} derivative, which will keep every loaded
-   * fragment in memory. If this becomes too memory intensive, it may be best to switch to a {@link
-   * android.support.v4.app.FragmentStatePagerAdapter}.
-   */
-  private SectionsPagerAdapter mSectionsPagerAdapter;
-
   @BindView(R.id.main_view_pager)
   ViewPager viewPager;
 
@@ -44,7 +36,20 @@ public class MainActivity extends AppCompatActivity {
 
     ButterKnife.bind(this);
 
-    mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+    /*
+     The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
+     sections. We use a {@link FragmentPagerAdapter} derivative, which will keep every loaded
+     fragment in memory. If this becomes too memory intensive, it may be best to switch to a {@link
+    * android.support.v4.app.FragmentStatePagerAdapter}.
+    */
+    /**
+     * The {@link android.support.v4.view.PagerAdapter} that will provide fragments for each of the
+     * sections. We use a {@link FragmentPagerAdapter} derivative, which will keep every loaded
+     * fragment in memory. If this becomes too memory intensive, it may be best to switch to a
+     * {@link android.support.v4.app.FragmentStatePagerAdapter}.
+     */
+    SectionsPagerAdapter mSectionsPagerAdapter =
+        new SectionsPagerAdapter(getSupportFragmentManager());
     viewPager.setAdapter(mSectionsPagerAdapter);
 
     tabLayout.setupWithViewPager(viewPager);
@@ -56,9 +61,9 @@ public class MainActivity extends AppCompatActivity {
    * A {@link FragmentPagerAdapter} that returns a fragment corresponding to one of the
    * sections/tabs/pages.
    */
-  public class SectionsPagerAdapter extends FragmentPagerAdapter {
+  class SectionsPagerAdapter extends FragmentPagerAdapter {
 
-    public SectionsPagerAdapter(FragmentManager fm) {
+    SectionsPagerAdapter(FragmentManager fm) {
       super(fm);
     }
 
@@ -124,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
               @Override
               public void onSuccess(InstanceIdResult instanceIdResult) {
                 String newToken = instanceIdResult.getToken();
-                Timber.d("new token " + newToken);
+                Timber.d("new token %s", newToken);
                 getSharedPreferences("settings", Context.MODE_PRIVATE)
                     .edit()
                     .putString("token", newToken)

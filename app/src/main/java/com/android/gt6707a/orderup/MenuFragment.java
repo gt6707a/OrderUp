@@ -43,8 +43,7 @@ public class MenuFragment extends Fragment {
 
   /** Returns a new instance of this fragment for the given section number. */
   public static MenuFragment newInstance() {
-    MenuFragment fragment = new MenuFragment();
-    return fragment;
+    return new MenuFragment();
   }
 
   @Override
@@ -89,7 +88,7 @@ public class MenuFragment extends Fragment {
                 new View.OnClickListener() {
                   @Override
                   public void onClick(View view) {
-                    Timber.d("Order item " + model.getName());
+                    Timber.d("Order item %s", model.getName());
                     onOrderItemClicked(model);
                   }
                 });
@@ -99,7 +98,7 @@ public class MenuFragment extends Fragment {
     menuRecyclerView.setAdapter(menuAdapter);
   }
 
-  public void onOrderItemClicked(MenuItem item) {
+  private void onOrderItemClicked(MenuItem item) {
     OrderItem order = new OrderItem();
     order.setItem(item.getName());
     order.setOrderTime(new Timestamp(System.currentTimeMillis()).getTime());

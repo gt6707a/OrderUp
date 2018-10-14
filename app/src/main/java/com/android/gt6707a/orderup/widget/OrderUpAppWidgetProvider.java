@@ -34,11 +34,11 @@ public class OrderUpAppWidgetProvider extends AppWidgetProvider {
     super();
   }
 
-  static void updateAppWidget(
-      Context context,
-      AppWidgetManager appWidgetManager,
-      int appWidgetId,
-      @Nullable OrderItem orderItem) {
+  private static void updateAppWidget(
+          Context context,
+          AppWidgetManager appWidgetManager,
+          int appWidgetId,
+          @Nullable OrderItem orderItem) {
 
     RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.order_up_app_widget);
 
@@ -72,7 +72,7 @@ public class OrderUpAppWidgetProvider extends AppWidgetProvider {
     appWidgetManager.updateAppWidget(appWidgetId, views);
   }
 
-  void initFirestore(final Context context) {
+  private void initFirestore(final Context context) {
     if (db == null) {
       final String token =
           context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");

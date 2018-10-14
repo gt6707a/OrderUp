@@ -83,7 +83,7 @@ public class OrderItemViewHolder extends RecyclerView.ViewHolder {
         });
   }
 
-  String toStatusText(long statusId, Context context) {
+  private String toStatusText(long statusId, Context context) {
     switch ((int) statusId) {
       case OrderItem.WAITING:
         return context.getString(R.string.order_waiting);

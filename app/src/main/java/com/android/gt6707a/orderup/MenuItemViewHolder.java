@@ -14,13 +14,13 @@ import butterknife.ButterKnife;
 
 public class MenuItemViewHolder extends RecyclerView.ViewHolder {
   @BindView(R.id.menu_item_name_text_view)
-  public TextView menuItemNameTextView;
+  TextView menuItemNameTextView;
 
   @BindView(R.id.menu_item_image_view)
-  public ImageView menuItemImageView;
+  ImageView menuItemImageView;
 
   @BindView(R.id.order_item_fab)
-  public FloatingActionButton orderItemFab;
+  FloatingActionButton orderItemFab;
 
   public MenuItemViewHolder(View itemView) {
     super(itemView);
