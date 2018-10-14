@@ -6,29 +6,29 @@ import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.RemoteViews;
 
 import com.android.gt6707a.orderup.MainActivity;
 import com.android.gt6707a.orderup.R;
 import com.android.gt6707a.orderup.entity.OrderItem;
-import com.google.firebase.firestore.EventListener;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import javax.annotation.Nullable;
-
 /** Implementation of App Widget functionality. */
 public class OrderUpAppWidgetProvider extends AppWidgetProvider {
 
-  private FirebaseFirestore firestore;
+  private DatabaseReference db;
 
   public OrderUpAppWidgetProvider() {
     super();
@@ -73,41 +73,39 @@ public class OrderUpAppWidgetProvider extends AppWidgetProvider {
   }
 
   void initFirestore(final Context context) {
-    if (firestore == null) {
-      String token =
+    if (db == null) {
+      final String token =
           context.getSharedPreferences("settings", Context.MODE_PRIVATE).getString("token", "");
-      firestore = FirebaseFirestore.getInstance();
-      firestore
-          .collection("orders")
-          .whereEqualTo("token", token)
-          .addSnapshotListener(
-              new EventListener<QuerySnapshot>() {
+      db = FirebaseDatabase.getInstance().getReference();
+      db.child("orders")
+          .addValueEventListener(
+              new ValueEventListener() {
                 @Override
-                public void onEvent(
-                    @Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException e) {
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                  List<OrderItem> orderItems = new ArrayList<>();
+
+                  for (DataSnapshot orderItemSnapshot : dataSnapshot.getChildren()) {
+                    OrderItem orderItem = orderItemSnapshot.getValue(OrderItem.class);
+                    if (orderItem.getToken().equals(token)) {
+                      orderItem.setKey(orderItemSnapshot.getKey());
+                      orderItems.add(orderItem);
+                    }
+                  }
+
+                  Collections.sort(
+                      orderItems,
+                      new Comparator<OrderItem>() {
+                        @Override
+                        public int compare(OrderItem o1, OrderItem o2) {
+                          if (o1.getStatusId() != o2.getStatusId())
+                            return Long.compare(o1.getStatusId(), o2.getStatusId());
+
+                          return Long.compare(o1.getOrderTime(), o2.getOrderTime());
+                        }
+                      });
 
                   OrderItem orderItem = null;
-                  if (value.size() > 0) {
-                    List<OrderItem> orders = new ArrayList<>();
-                    for (QueryDocumentSnapshot snapshot : value) {
-                      OrderItem o = snapshot.toObject(OrderItem.class);
-                      o.setKey(snapshot.getId());
-                      orders.add(o);
-                    }
-
-                    Collections.sort(
-                        orders,
-                        new Comparator<OrderItem>() {
-                          @Override
-                          public int compare(OrderItem o1, OrderItem o2) {
-                            if (o1.getStatusId() != o2.getStatusId())
-                              return Long.compare(o1.getStatusId(), o2.getStatusId());
-
-                            return Long.compare(o1.getOrderTime(), o2.getOrderTime());
-                          }
-                        });
-                    orderItem = orders.get(0);
-                  }
+                  if (orderItems.size() > 0) orderItem = orderItems.get(0);
 
                   AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
                   int[] appWidgetIds =
@@ -118,6 +116,9 @@ public class OrderUpAppWidgetProvider extends AppWidgetProvider {
                     updateAppWidget(context, appWidgetManager, appWidgetId, orderItem);
                   }
                 }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {}
               });
     }
   }

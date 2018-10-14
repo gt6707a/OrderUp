@@ -147,6 +147,5 @@ public class OrdersFragment extends Fragment implements OrderItemViewHolder.Orde
                 Timber.d("Failed to update order");
               }
             });
-    ;
   }
 }
