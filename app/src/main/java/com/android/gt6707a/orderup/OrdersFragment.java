@@ -35,10 +35,6 @@ public class OrdersFragment extends Fragment implements OrderItemViewHolder.Orde
   @BindView(R.id.orders_recycler_view)
   RecyclerView ordersRecyclerView;
 
-  public OrdersFragment() {
-    // Required empty public constructor
-  }
-
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

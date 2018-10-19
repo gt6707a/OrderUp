@@ -35,7 +35,7 @@ public class SettingsFragment extends PreferenceFragmentCompat
 
       if (!(p instanceof CheckBoxPreference)) {
         String value = sharedPreferences.getString(p.getKey(), "");
-        setPreferenceSummary(p, String.format("All your orders belong to %s", value));
+        setPreferenceSummary(p, String.format(getString(R.string.settings_user_name_description), value));
       }
     }
 
@@ -51,14 +51,14 @@ public class SettingsFragment extends PreferenceFragmentCompat
       // Updates the summary for the preference
       if (!(preference instanceof CheckBoxPreference)) {
         String value = sharedPreferences.getString(preference.getKey(), "");
-        setPreferenceSummary(preference, String.format("All your orders belong to %s", value));
+        setPreferenceSummary(preference,  String.format(getString(R.string.settings_user_name_description), value));
       }
     }
   }
 
   @Override
   public boolean onPreferenceChange(Preference preference, Object newValue) {
-    Toast error = Toast.makeText(getContext(), "Your name cannot be blank", Toast.LENGTH_SHORT);
+    Toast error = Toast.makeText(getContext(), getString(R.string.settings_user_name_cannot_be_blank), Toast.LENGTH_SHORT);
     String sizeKey = getString(R.string.settings_user_name_key);
     if (preference.getKey().equals(sizeKey)) {
       String newName = (String) newValue;

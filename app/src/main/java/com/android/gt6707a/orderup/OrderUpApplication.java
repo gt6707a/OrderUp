@@ -3,7 +3,7 @@ package com.android.gt6707a.orderup;
 import android.app.Application;
 import timber.log.Timber;
 
-class OrderUpApplication extends Application {
+public class OrderUpApplication extends Application {
   @Override
   public void onCreate() {
     super.onCreate();

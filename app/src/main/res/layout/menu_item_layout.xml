@@ -36,9 +36,10 @@
                 android:id="@+id/order_item_fab"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_plus_white_48dp"
+                android:layout_alignParentEnd="true"
                 android:layout_marginEnd="8dp"
-                android:layout_alignParentEnd="true" />
+                android:contentDescription="@string/order_item"
+                android:src="@drawable/ic_plus_white_48dp" />
 
         </RelativeLayout>
 

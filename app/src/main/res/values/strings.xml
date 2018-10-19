@@ -5,9 +5,10 @@
     <string name="settings_user_name_key">userName</string>
     <string name="settings_user_name_title">Your Name</string>
     <string name="settings_user_name_summary">Identifies your order</string>
+    <string name="settings_user_name_description">All your orders belong to %s</string>
+    <string name="settings_user_name_cannot_be_blank">Your name cannot be blank</string>
     <string name="main_tabs_menu">Menu</string>
     <string name="main_tabs_orders">Orders</string>
-
 
     <string name="menu_item_photo_description">Photo of menu item</string>
     <string name="order_waiting">Waiting</string>

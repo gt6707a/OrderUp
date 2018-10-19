@@ -30,10 +30,6 @@ public class OrderUpAppWidgetProvider extends AppWidgetProvider {
 
   private DatabaseReference db;
 
-  public OrderUpAppWidgetProvider() {
-    super();
-  }
-
   private static void updateAppWidget(
           Context context,
           AppWidgetManager appWidgetManager,
